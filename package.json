@@ -1,0 +1,28 @@
+{
+  "name": "conscious-express",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nm": "nodemon app.js"
+  },
+  "author": "samuel",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "connect-mongodb-session": "^5.0.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.7.0",
+    "nodemon": "^3.1.7",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/connect-mongodb-session": "^2.4.7",
+    "@types/express-session": "^1.18.0"
+  }
+}
