@@ -47,11 +47,13 @@ passport.use(new GoogleStrategy(
 
 passport.serializeUser((user, done) => {
     console.log("serializing: " + user)
-    done(null, user);
+    return done(null, user.id);
 });
-passport.deserializeUser(async (user, done) => {
-    console.log("deserializing: " + user)
-    done(null, user); 
+passport.deserializeUser(async (id, done) => {
+    console.log("deserializing: " + id)
+    let deUser = await UserModel.findOne({_id: id})
+    console.log(deUser)
+    done(null, deUser); 
 });
 
 export default passport;

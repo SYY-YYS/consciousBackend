@@ -15,7 +15,8 @@ const UserSchema = new mongoose.Schema(
         // ToDo : {
         //     date: time_spent
         // }, 
-    }
+    },
+    { strict: false }
 );
 
 export default mongoose.model('consciousData', UserSchema);
