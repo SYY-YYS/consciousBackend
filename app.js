@@ -153,7 +153,7 @@ app.post("/update", async (req, res) => {
                     [qtitle]: {$exists: true}
                 }
             )
-            console.log(checkDate)
+            console.log('checkDate: ' + checkDate)
             if (checkDate) {
                 // add time to the same date (first would delay? cuz didnt print newUser lol)
                 await UserModel.updateOne(
@@ -162,10 +162,11 @@ app.post("/update", async (req, res) => {
                 )
             } else {
                 // add new date (havent checked)
-                await UserModel.updateOne(
+                const newUser = await UserModel.updateOne(
                     {_id: id},
-                    {$push: {[ToDo]: {[currentDate]: parseInt(accumulatedTime)}}}
+                    {$set: {[qtitle]: parseInt(accumulatedTime)}}
                 )
+                console.log(newUser)
             }
         }
         // new Todo V
