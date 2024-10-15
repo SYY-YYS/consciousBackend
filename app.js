@@ -49,7 +49,7 @@ app.use(session({
         sameSite: isProduction? 'none' : 'lax',
         // partitioned: isProduction? true : false,
         httpOnly: true,
-        maxAge: 3600000,
+        maxAge: 3600000*5,
         domain: isProduction? '.samuelsiu.work': 'localhost',
         path: "/"
     }
@@ -128,7 +128,7 @@ app.post("/logout", (req, res) => {
 app.post("/update", async (req, res) => {
     console.log(req.body)
     const {ToDo, startTime, accumulatedTime} = req.body;
-    const id = req.session.passport.user;
+    const id = req.session.passport? req.session.passport.user : undefined;
     const currentDate = new Date().toJSON().slice(0,10);
 
 
@@ -187,6 +187,26 @@ app.post("/update", async (req, res) => {
 
     }
 
+})
+
+app.get("/7days", async (req, res) => {
+    const id = req.session.passport? req.session.passport.user : undefined;
+    
+
+    if (id) {
+        const currentDate = new Date();
+        const sevenDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 7));
+        console.log('sevendaysago: ' + sevenDaysAgo)
+        const data = await UserModel.find(
+            {_id: id},
+            {_id:0, username: 0, email: 0, __v: 0}
+        )
+        console.log(data)
+        res.send(data)
+    } else {
+        res.send('please first login')
+    }
+    
 })
 
 
