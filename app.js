@@ -6,7 +6,7 @@ import passport from "./passport.js";
 const app = express();
 
 
-const isProduction = false;
+const isProduction = true;
 
 // session for cookies
 import session from 'express-session';
