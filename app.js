@@ -8,6 +8,7 @@ const app = express();
 
 const isProduction = true;
 
+
 // session for cookies
 import session from 'express-session';
 import MongoDBSession from 'connect-mongodb-session';
@@ -15,8 +16,10 @@ import MongoDBSession from 'connect-mongodb-session';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const client_url = process.env.CLIENT_URL
+
 let MongoSession = MongoDBSession(session);
-const mongoose_uri = process.env.Mongoose_URI;
+const mongoose_uri = process.env.MONGOOSE_URI;
 
 const store = new MongoSession({
     uri: mongoose_uri,
