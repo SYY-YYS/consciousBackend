@@ -98,9 +98,9 @@ app.get("/login", (req, res) => {
     console.log(req.session)
     
     if (req.session.passport) {
-        return res.send(true)
+        res.send(true)
     } else {
-        return res.send(false)
+        res.send(false)
     }
 }
 )
