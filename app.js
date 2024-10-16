@@ -1,6 +1,7 @@
 import express from "express";
 import cookies from 'cookie-parser';
 import passport from "./passport.js";
+import ServerlessHttp from "serverless-http";
 // import passport from "passport";
 
 const app = express();
@@ -217,3 +218,5 @@ app.get("/7days", async (req, res) => {
 app.listen(8010, ()=> {
     console.log('server started on port 8010')
 })
+
+module.exports.handler = ServerlessHttp(app)
