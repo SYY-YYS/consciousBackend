@@ -64,7 +64,7 @@ app.use(passport.session());
 app.use(cookies());
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", isProduction? 'samuelsiu.work': 'http://localhost:3000');
+    res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
     res.set("Access-Control-Allow-Credentials", 'true');
     res.set("Access-Control-Allow-Headers", 'content-type')
     next();
