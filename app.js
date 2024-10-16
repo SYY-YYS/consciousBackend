@@ -215,9 +215,9 @@ app.get("/7days", async (req, res) => {
 
 
 
-// app.listen(8010, ()=> {
-//     console.log('server started on port 8010')
-// })
+app.listen(8010, ()=> {
+    console.log('server started on port 8010')
+})
 
 
-export const handler =  ServerlessHttp(app)
+// export const handler =  ServerlessHttp(app)
