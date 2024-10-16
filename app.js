@@ -1,6 +1,6 @@
 import express from "express";
 import cookies from 'cookie-parser';
-import passport from "./passport.js";
+import passport from "passport";
 import ServerlessHttp from "serverless-http";
 // import passport from "passport";
 
@@ -35,6 +35,8 @@ mongoose.connect(mongoose_uri).then((res) => {
     console.log("MongoDB connected by mongoose.")
 });
 
+import passportSetup from "./passport.js"
+
 app.set('trust proxy', 1)
 
 import cors from "cors";
@@ -60,7 +62,7 @@ app.use(session({
     cookie: {
         secure: isProduction? true : false, 
         sameSite: isProduction? 'none' : 'lax',
-        // partitioned: isProduction? true : false,
+        partitioned: isProduction? true : false,
         httpOnly: true,
         maxAge: 3600000*5,
         domain: isProduction? '.samuelsiu.work': 'localhost',
@@ -134,8 +136,8 @@ app.post("/logout", (req, res) => {
     // })
     // bug: cannot destroy session and cannot clearCookie
     
-    console.log("session state: " +req.session)
-    console.log('session destroyed')
+    console.log(req.session)
+    // console.log('session destroyed')
     // res.send("how")
 })
 
