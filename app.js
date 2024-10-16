@@ -219,4 +219,5 @@ app.listen(8010, ()=> {
     console.log('server started on port 8010')
 })
 
-module.exports.handler = ServerlessHttp(app)
+
+export const handler =  ServerlessHttp(app)
