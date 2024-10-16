@@ -7,7 +7,7 @@ import ServerlessHttp from "serverless-http";
 const app = express();
 
 
-const isProduction = true;
+
 
 
 // session for cookies
@@ -18,6 +18,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const client_url = process.env.CLIENT_URL
+const isProduction = process.env.IS_PRODUCTION;
 
 let MongoSession = MongoDBSession(session);
 const mongoose_uri = process.env.MONGOOSE_URI;
@@ -43,6 +44,14 @@ import UserModel from "./Model/UserModel.js";
 //     credentials: true,
 // }))
 
+app.use((req, res, next) => {
+    console.log("Access-Control-Allow-Origin", client_url)
+    res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
+    res.set("Access-Control-Allow-Credentials", 'true');
+    res.set("Access-Control-Allow-Headers", 'content-type')
+    next();
+});
+
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
@@ -64,12 +73,7 @@ app.use(passport.session());
 
 app.use(cookies());
 
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
-    res.set("Access-Control-Allow-Credentials", 'true');
-    res.set("Access-Control-Allow-Headers", 'content-type')
-    next();
-});
+
 
 // for parsing body (post)
 app.use(express.urlencoded({extended: true}))
