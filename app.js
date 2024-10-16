@@ -45,7 +45,7 @@ import UserModel from "./Model/UserModel.js";
 // }))
 
 app.use((req, res, next) => {
-    console.log("Access-Control-Allow-Origin", client_url)
+    // console.log("Access-Control-Allow-Origin", client_url)
     res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
     res.set("Access-Control-Allow-Credentials", 'true');
     res.set("Access-Control-Allow-Headers", 'content-type')
@@ -124,10 +124,11 @@ app.post("/logout", (req, res) => {
         if (err) {
             res.status(500).send("cannot logout")
         }
+        res.clearCookie('connect.sid');
         res.status(200).send('logged out')
     })
     
-    res.clearCookie('connect.sid');
+    
     // res.redirect(isProduction? client_url: "http://localhost:3000");
     
     })
