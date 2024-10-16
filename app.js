@@ -118,11 +118,17 @@ app.post("/logout", (req, res) => {
     // res.redirect("/");
     req.session.destroy((err) => {
     if (err) {
-        return res.status(500).send("cannot destroy")
+        res.status(500).send("cannot destroy")
     }
+    req.logout(err => {
+        if (err) {
+            res.status(500).send("cannot logout")
+        }
+        res.status(200).send('logged out')
+    })
     
     res.clearCookie('connect.sid');
-    res.redirect(isProduction? client_url: "http://localhost:3000");
+    // res.redirect(isProduction? client_url: "http://localhost:3000");
     
     })
     // bug: cannot destroy session and cannot clearCookie
