@@ -1,12 +1,10 @@
 import express from "express";
 import cookies from 'cookie-parser';
-import passport from "passport";
+
 import ServerlessHttp from "serverless-http";
 // import passport from "passport";
-
-const app = express();
-
-
+// import jwt from "jsonwebtoken";
+// import { MongoClient } from "mongodb";
 
 
 
@@ -17,11 +15,15 @@ import MongoDBSession from 'connect-mongodb-session';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import passport from "passport";
+
 const client_url = process.env.CLIENT_URL
-const isProduction = process.env.IS_PRODUCTION;
+const isProduction = process.env.IS_PRODUCTION === "true";
 
 let MongoSession = MongoDBSession(session);
 const mongoose_uri = process.env.MONGOOSE_URI;
+
+const app = express();
 
 const store = new MongoSession({
     uri: mongoose_uri,
@@ -37,7 +39,7 @@ mongoose.connect(mongoose_uri).then((res) => {
 
 import passportSetup from "./passport.js"
 
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
 
 import cors from "cors";
 import UserModel from "./Model/UserModel.js";
@@ -47,7 +49,7 @@ import UserModel from "./Model/UserModel.js";
 // }))
 
 app.use((req, res, next) => {
-    // console.log("Access-Control-Allow-Origin", client_url)
+    // console.log("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000', isProduction)
     res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
     res.set("Access-Control-Allow-Credentials", 'true');
     res.set("Access-Control-Allow-Headers", 'content-type')
@@ -88,16 +90,18 @@ app.get('/', (req,res) => {
 app.get('/login/google', passport.authenticate('google'));
 
 app.get('/oauth2/redirect/google',
-    passport.authenticate('google', { failureRedirect: '/login', failureMessage: true }),
+    passport.authenticate('google', { 
+        failureRedirect: '/login', 
+        failureMessage: true }),
     function(req, res) {
-        // req.session.isAuth = true;
+        req.session.isAuth = true;
         console.log("req.user:" + req.user)
         res.redirect(isProduction? client_url: "http://localhost:3000");
     });
 
 // check login or not
 app.get("/login", (req, res) => {
-    console.log(req.session)
+    console.log(req.session, req.session.isAuth)
     
     if (req.session.passport) {
         res.send(true)
@@ -107,7 +111,7 @@ app.get("/login", (req, res) => {
 }
 )
 
-app.post("/logout", (req, res) => {
+app.post("/logout", (req, res, next) => {
     console.log("logging out" + req.session)
     // req.logout((error) => {
     //     if (error) console.log(`unable to logout`, error);
@@ -118,10 +122,22 @@ app.post("/logout", (req, res) => {
     // });
     // req.session = null;
     // res.redirect("/");
-    req.session.destroy((err) => {
-    if (err) {
-        res.status(500).send("cannot destroy")
-    }
+    // req.session.destroy((err) => {
+    // if (err) {
+    //     // res.status(500).send("cannot destroy")\
+    //     return next(err);
+    // }
+    req.logout((err) => {
+        if (err) {
+          return next(err);
+        }
+        req.session.destroy((err) => {
+          if (err) {
+            return next(err);
+          }
+          res.redirect('/');
+        });
+      });
     // req.logout(err => {
     //     if (err) {
     //         res.status(500).send("cannot logout")
@@ -130,10 +146,10 @@ app.post("/logout", (req, res) => {
     //     res.status(200).send('logged out')
     // })
     
-    res.status(200).send('logged out')
+    // res.status(200).send('logged out')
     // res.redirect(isProduction? client_url: "http://localhost:3000");
     
-    })
+    // })
     // bug: cannot destroy session and cannot clearCookie
     
     console.log(req.session)
