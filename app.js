@@ -39,7 +39,7 @@ mongoose.connect(mongoose_uri).then((res) => {
 
 import passportSetup from "./passport.js"
 
-// app.set('trust proxy', 1)
+app.set('trust proxy', 1)
 
 import cors from "cors";
 import UserModel from "./Model/UserModel.js";
@@ -48,13 +48,7 @@ import UserModel from "./Model/UserModel.js";
 //     credentials: true,
 // }))
 
-app.use((req, res, next) => {
-    // console.log("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000', isProduction)
-    res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
-    res.set("Access-Control-Allow-Credentials", 'true');
-    res.set("Access-Control-Allow-Headers", 'content-type')
-    next();
-});
+
 
 app.use(session({
     secret: process.env.SESSION_KEY,
@@ -71,6 +65,14 @@ app.use(session({
         path: "/"
     }
 }))
+
+app.use((req, res, next) => {
+    // console.log("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000', isProduction)
+    res.setHeader("Access-Control-Allow-Origin", isProduction? client_url: 'http://localhost:3000');
+    res.set("Access-Control-Allow-Credentials", 'true');
+    res.set("Access-Control-Allow-Headers", 'content-type')
+    next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
